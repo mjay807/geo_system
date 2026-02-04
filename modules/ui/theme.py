@@ -52,33 +52,33 @@ div[data-testid="stButton"] button[kind="primary"],
 div[data-testid="stFormSubmitButton"] button[kind="primary"] {
   # background-color: var(--primary) !important;
   # color: white !important;
-  border-radius: var(--radius) !important;
+  # border-radius: var(--radius) !important;
   # border: none !important;
 }
 
-button[kind="secondary"],
-div[data-testid="stButton"] button[kind="secondary"] {
-  background: #FFFFFF !important;
-  border: 1px solid var(--border) !important;
-  # color: var(--text) !important;
-  border-radius: var(--radius) !important;
-}
+# button[kind="secondary"],
+# div[data-testid="stButton"] button[kind="secondary"] {
+#   background: #FFFFFF !important;
+#   border: 1px solid var(--border) !important;
+#   # color: var(--text) !important;
+#   border-radius: var(--radius) !important;
+# }
 
-button:focus, button:focus-visible {
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
-  outline: none !important;
-}
+# button:focus, button:focus-visible {
+#   box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
+#   outline: none !important;
+# }
 
 /* 输入 */
 .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
   border-radius: 10px !important;
 }
 .stTextInput input, .stTextArea textarea {
-  border: 1px solid var(--border) !important;
+  # border: 1px solid var(--border) !important;
   padding: 0.75rem !important;
 }
 .stTextInput input:focus, .stTextArea textarea:focus {
-  border-color: var(--primary) !important;
+  # border-color: var(--primary) !important;
   box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
 }
 
@@ -98,7 +98,7 @@ button:focus, button:focus-visible {
 .stTabs [role="tab"]:focus-visible {
   outline: none !important;
   box-shadow: none !important;
-  border: none !important;
+  # border: none !important;
 }
 
 /* Tabs 产品化 */

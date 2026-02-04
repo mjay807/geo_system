@@ -798,41 +798,40 @@ with tab3:
     with st.container(border=True):
         st.markdown("粘贴或上传已写文章，一键提升 GEO 效果（结构化、可引用、自然植入品牌）")
 
-        with st.form("opt_form", clear_on_submit=False):
-            input_mode = st.radio(
-                "输入方式",
-                ["粘贴文本", "上传文件（TXT/MD）"],
-                horizontal=True,
-                key="opt_input_mode",
+        # 输入方式与文章内容放在表单外，以便粘贴/上传后能触发重跑，从而正确更新「开始优化」按钮的可用状态
+        input_mode = st.radio(
+            "输入方式",
+            ["粘贴文本", "上传文件（TXT/MD）"],
+            horizontal=True,
+            key="opt_input_mode",
+        )
+        if input_mode == "粘贴文本":
+            original_article = st.text_area(
+                "粘贴文章内容", height=360, key="opt_text"
             )
+        else:
+            uploaded = st.file_uploader(
+                "上传 TXT 或 MD 文件",
+                type=["txt", "md"],
+                key="opt_uploader",
+            )
+            original_article = ""
+            if uploaded:
+                try:
+                    original_article = safe_decode_uploaded(uploaded) or ""
+                except Exception as e:
+                    st.error(f"上传文件解析失败：{e}")
+                    original_article = ""
+                if original_article:
+                    st.text_area(
+                        "上传内容预览",
+                        original_article,
+                        height=200,
+                        disabled=True,
+                        key="opt_upload_preview",
+                    )
 
-            if input_mode == "粘贴文本":
-                original_article = st.text_area(
-                    "粘贴文章内容", height=360, key="opt_text"
-                )
-            else:
-                uploaded = st.file_uploader(
-                    "上传 TXT 或 MD 文件",
-                    type=["txt", "md"],
-                    key="opt_uploader",
-                )
-                original_article = ""
-                if uploaded:
-                    try:
-                        original_article = safe_decode_uploaded(uploaded) or ""
-                    except Exception as e:
-                        st.error(f"上传文件解析失败：{e}")
-                        original_article = ""
-
-                    if original_article:
-                        st.text_area(
-                            "上传内容预览",
-                            original_article,
-                            height=200,
-                            disabled=True,
-                            key="opt_upload_preview",
-                        )
-
+        with st.form("opt_form", clear_on_submit=False):
             target_platform = st.selectbox(
                 "目标平台（影响文风，可选）",
                 [
