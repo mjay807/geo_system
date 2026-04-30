@@ -11,37 +11,7 @@ from langchain_core.prompts import PromptTemplate
 from modules.keyword_mining import KeywordMining
 from modules.semantic_expander import SemanticExpander
 from modules.topic_cluster import TopicCluster
-
-
-INVALID_FS_CHARS = r'<>:"/\\|?*\n\r\t'
-
-
-def sanitize_filename(name: str, max_len: int = 80) -> str:
-    """Copy of utility from geo_tool, kept local to avoid circular imports."""
-    if not name:
-        return "untitled"
-    name = name.strip()
-    # 延续主应用中的命名清理规则
-    import re  # 局部导入，避免在模块顶部重复导入
-
-    name = re.sub(rf"[{re.escape(INVALID_FS_CHARS)}]", "_", name)
-    name = re.sub(r"_+", "_", name).strip("_")
-    return name[:max_len] if len(name) > max_len else name
-
-
-def extract_json_array(text: str):
-    """从模型输出中抽取 JSON 数组（JsonOutputParser 失败时兜底）。"""
-    if not text:
-        return None
-    import re
-
-    m = re.search(r"\[[\s\S]*\]", text)
-    if not m:
-        return None
-    try:
-        return json.loads(m.group(0))
-    except Exception:
-        return None
+from modules.ui.components import sanitize_filename, extract_json_array
 
 
 def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) -> None:
@@ -1134,16 +1104,16 @@ def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) 
                             source_idx = next(
                                 (
                                     i
-                                    for i, n in enumerate(nodes)
-                                    if n["id"] == edge["source"]
+                                    for i, nd in enumerate(nodes)
+                                    if nd["id"] == edge["source"]
                                 ),
                                 None,
                             )
                             target_idx = next(
                                 (
                                     i
-                                    for i, n in enumerate(nodes)
-                                    if n["id"] == edge["target"]
+                                    for i, nd in enumerate(nodes)
+                                    if nd["id"] == edge["target"]
                                 ),
                                 None,
                             )
@@ -1384,12 +1354,12 @@ def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) 
 
                 with st.container(border=True):
                     # 默认使用 brand，允许覆盖
-                    default_industry = brand if brand else "外贸ERP"
+                    default_industry = brand if brand else ""
                     industry = st.text_input(
                         "行业领域",
                         value=default_industry,
                         key="mining_industry",
-                        help="输入您的行业领域，如：外贸ERP、AI工具、SaaS产品等",
+                        help="输入您的行业领域，如：AI工具、SaaS产品、电商平台等",
                     )
                 num_mine = st.slider("挖掘数量", 10, 50, 20, key="mining_num")
 

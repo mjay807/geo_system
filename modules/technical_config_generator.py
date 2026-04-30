@@ -215,14 +215,10 @@ class TechnicalConfigGenerator:
             article_lastmod = lastmod
             if created_at:
                 try:
-                    # 尝试解析时间字符串
-                    if "T" in created_at:
-                        dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-                    else:
-                        dt = datetime.strptime(created_at, "%Y-%m-%d")
-                    article_lastmod = dt.strftime("%Y-%m-%d")
-                except:
-                    pass
+                    dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+                except Exception:
+                    dt = datetime.strptime(created_at, "%Y-%m-%d")
+                article_lastmod = dt.strftime("%Y-%m-%d")
             
             urls.append({
                 "loc": url_path,
@@ -332,7 +328,7 @@ class TechnicalConfigGenerator:
         try:
             result = urlparse(url)
             return all([result.scheme, result.netloc])
-        except:
+        except Exception:
             return False
     
     def sanitize_url_path(self, path: str) -> str:

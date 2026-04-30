@@ -63,7 +63,8 @@ class WorkflowExecutor:
             "step_index": self.current_step_index
         }
         self.execution_log.append(log_entry)
-        print(f"[{level.upper()}] {message}")
+        import logging
+        getattr(logging, level.lower(), logging.info)(message)
     
     def execute_step(self, step: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """执行单个步骤"""
@@ -218,11 +219,11 @@ class WorkflowExecutor:
                     verify_results_list = []
                     for result in results:
                         verify_results_list.append({
-                            "query": result.get("keyword", ""),
-                            "brand": brand,
-                            "verify_model": result.get("model", ""),
-                            "mention_count": result.get("mention_count", 0),
-                            "mention_position": result.get("mention_position", "")
+                            "问题": result.get("keyword", ""),
+                            "品牌": brand,
+                            "验证模型": result.get("model", ""),
+                            "提及次数": result.get("mention_count", 0),
+                            "位置": result.get("mention_position", "")
                         })
                     self.storage.save_verify_results(verify_results_list)
             except Exception as e:

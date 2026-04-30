@@ -4,7 +4,7 @@
 """
 import sqlite3
 import json
-import os
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Optional, Any
@@ -30,7 +30,7 @@ class DataStorage:
     
     def _init_sqlite(self):
         """初始化SQLite数据库"""
-        with sqlite3.connect(self.db_path) as conn:
+        with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
             cursor = conn.cursor()
             
             # 关键词表
@@ -201,7 +201,7 @@ class DataStorage:
     def save_keywords(self, keywords: List[str], brand: str):
         """保存关键词列表"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 for keyword in keywords:
                     cursor.execute(
@@ -230,7 +230,7 @@ class DataStorage:
     def get_keywords(self, brand: Optional[str] = None) -> List[str]:
         """获取关键词列表"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 if brand:
                     cursor.execute("SELECT keyword FROM keywords WHERE brand = ?", (brand,))
@@ -256,7 +256,7 @@ class DataStorage:
                      filename: str, brand: str):
         """保存生成的文章"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO articles (keyword, platform, content, filename, brand)
@@ -286,7 +286,7 @@ class DataStorage:
                      platform: Optional[str] = None) -> List[Dict]:
         """获取文章列表"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 if brand and platform:
                     df = pd.read_sql_query(
                         "SELECT * FROM articles WHERE brand = ? AND platform = ?",
@@ -321,7 +321,7 @@ class DataStorage:
                          changes: str, platform: str, brand: str):
         """保存优化记录"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO optimizations 
@@ -351,7 +351,7 @@ class DataStorage:
     def get_optimizations(self, brand: Optional[str] = None) -> List[Dict]:
         """获取优化记录"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 if brand:
                     df = pd.read_sql_query(
                         "SELECT * FROM optimizations WHERE brand = ? ORDER BY created_at DESC",
@@ -380,7 +380,7 @@ class DataStorage:
     def save_verify_results(self, results: List[Dict]):
         """批量保存验证结果"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 for result in results:
                     cursor.execute("""
@@ -423,7 +423,7 @@ class DataStorage:
             include_timestamp: 是否包含时间戳字段
         """
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 if include_timestamp:
                     if brand:
                         df = pd.read_sql_query(
@@ -496,7 +496,7 @@ class DataStorage:
         stats = {}
         
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 
                 # 关键词数量
@@ -567,7 +567,7 @@ class DataStorage:
     ):
         """保存 API 调用记录"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO api_calls 
@@ -613,7 +613,7 @@ class DataStorage:
     ) -> pd.DataFrame:
         """获取 API 调用记录（返回 DataFrame）"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 query = """
                     SELECT 
                         operation_type as "操作类型",
@@ -694,7 +694,7 @@ class DataStorage:
     def get_cost_stats(self, brand: Optional[str] = None) -> Dict[str, Any]:
         """获取成本统计"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 
                 if brand:
@@ -756,7 +756,7 @@ class DataStorage:
         workflow["id"] = workflow_id
         
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT OR REPLACE INTO workflows 
@@ -795,7 +795,7 @@ class DataStorage:
     def get_workflow(self, workflow_id: str) -> Optional[Dict[str, Any]]:
         """获取工作流"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT * FROM workflows WHERE id = ?", (workflow_id,))
                 row = cursor.fetchone()
@@ -829,7 +829,7 @@ class DataStorage:
     def list_workflows(self, enabled_only: bool = False) -> List[Dict[str, Any]]:
         """列出所有工作流"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 if enabled_only:
                     cursor = conn.cursor()
                     cursor.execute("SELECT * FROM workflows WHERE enabled = 1 ORDER BY updated_at DESC")
@@ -878,7 +878,7 @@ class DataStorage:
     def delete_workflow(self, workflow_id: str) -> bool:
         """删除工作流"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("DELETE FROM workflows WHERE id = ?", (workflow_id,))
                 conn.commit()
@@ -900,7 +900,7 @@ class DataStorage:
     def save_workflow_execution(self, execution: Dict[str, Any]):
         """保存工作流执行记录"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO workflow_executions 
@@ -930,7 +930,7 @@ class DataStorage:
     def get_workflow_executions(self, workflow_id: Optional[str] = None, limit: int = 50) -> List[Dict[str, Any]]:
         """获取工作流执行记录"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 if workflow_id:
                     df = pd.read_sql_query(
                         "SELECT * FROM workflow_executions WHERE workflow_id = ? ORDER BY started_at DESC LIMIT ?",
@@ -962,7 +962,7 @@ class DataStorage:
         template["id"] = template_id
         
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT OR REPLACE INTO workflow_templates 
@@ -997,7 +997,7 @@ class DataStorage:
     def get_workflow_template(self, template_id: str) -> Optional[Dict[str, Any]]:
         """获取工作流模板"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT * FROM workflow_templates WHERE id = ?", (template_id,))
                 row = cursor.fetchone()
@@ -1028,7 +1028,7 @@ class DataStorage:
     def get_workflow_templates(self) -> List[Dict[str, Any]]:
         """获取所有工作流模板"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 df = pd.read_sql_query("SELECT * FROM workflow_templates ORDER BY created_at DESC", conn)
             return df.to_dict('records')
         else:
@@ -1044,7 +1044,7 @@ class DataStorage:
     def save_platform_account(self, platform: str, account_config: Dict[str, Any], brand: str):
         """保存平台账号配置"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT OR REPLACE INTO platform_accounts 
@@ -1097,7 +1097,7 @@ class DataStorage:
     def get_platform_account(self, platform: str, brand: str) -> Optional[Dict[str, Any]]:
         """获取平台账号配置"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     SELECT * FROM platform_accounts 
@@ -1134,7 +1134,7 @@ class DataStorage:
     def list_platform_accounts(self, brand: Optional[str] = None) -> List[Dict[str, Any]]:
         """列出所有平台账号"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 if brand:
                     df = pd.read_sql_query(
                         "SELECT * FROM platform_accounts WHERE brand = ? AND is_active = 1 ORDER BY updated_at DESC",
@@ -1165,7 +1165,7 @@ class DataStorage:
                            error_message: str = '', retry_count: int = 0):
         """保存发布记录"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO publish_records 
@@ -1206,7 +1206,7 @@ class DataStorage:
                            brand: Optional[str] = None) -> List[Dict]:
         """获取发布记录"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 query = "SELECT pr.*, a.brand FROM publish_records pr LEFT JOIN articles a ON pr.article_id = a.id WHERE 1=1"
                 params = []
                 
@@ -1237,13 +1237,15 @@ class DataStorage:
                 data = [r for r in data if r.get('article_id') == article_id]
             if platform:
                 data = [r for r in data if r.get('platform') == platform]
+            if brand:
+                data = [r for r in data if r.get('brand') == brand]
             
             return data
     
     def get_article_by_id(self, article_id: int) -> Optional[Dict]:
         """根据ID获取文章"""
         if self.storage_type == "sqlite":
-            with sqlite3.connect(self.db_path) as conn:
+            with sqlite3.connect(self.db_path, check_same_thread=False) as conn:
                 df = pd.read_sql_query(
                     "SELECT * FROM articles WHERE id = ?",
                     conn, params=(article_id,)

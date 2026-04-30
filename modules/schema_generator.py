@@ -466,3 +466,219 @@ class SchemaGenerator:
         )
         
         return self.generate_html_script_tag(schema)
+    
+    def generate_faq_schema(self, faq_items: List[Dict[str, str]]) -> Dict:
+        """
+        生成 FAQPage 类型的 Schema
+        
+        Args:
+            faq_items: FAQ 列表，每个元素包含 {"question": "...", "answer": "..."}
+            
+        Returns:
+            JSON-LD Schema 字典
+        """
+        main_entity = []
+        for item in faq_items:
+            main_entity.append({
+                "@type": "Question",
+                "name": item["question"],
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": item["answer"]
+                }
+            })
+        
+        return {
+            "@context": self.context,
+            "@type": "FAQPage",
+            "mainEntity": main_entity
+        }
+    
+    def generate_howto_schema(self, title: str, steps: List[Dict[str, str]], 
+                              description: str = "") -> Dict:
+        """
+        生成 HowTo 类型的 Schema
+        
+        Args:
+            title: 操作标题
+            steps: 步骤列表，每个元素包含 {"name": "...", "text": "..."}
+            description: 操作描述
+            
+        Returns:
+            JSON-LD Schema 字典
+        """
+        howto_steps = []
+        for i, step in enumerate(steps, 1):
+            howto_steps.append({
+                "@type": "HowToStep",
+                "position": i,
+                "name": step.get("name", f"步骤 {i}"),
+                "text": step.get("text", "")
+            })
+        
+        schema = {
+            "@context": self.context,
+            "@type": "HowTo",
+            "name": title,
+            "step": howto_steps
+        }
+        
+        if description:
+            schema["description"] = description
+        
+        return schema
+    
+    def generate_article_schema(self, title: str, author: str, 
+                                date_published: str, description: str = "",
+                                image: str = "", url: str = "") -> Dict:
+        """
+        生成 Article 类型的 Schema
+        
+        Args:
+            title: 文章标题
+            author: 作者名称
+            date_published: 发布日期 (YYYY-MM-DD)
+            description: 文章描述
+            image: 文章图片 URL
+            url: 文章 URL
+            
+        Returns:
+            JSON-LD Schema 字典
+        """
+        schema = {
+            "@context": self.context,
+            "@type": "Article",
+            "headline": title,
+            "author": {
+                "@type": "Person",
+                "name": author
+            },
+            "datePublished": date_published
+        }
+        
+        if description:
+            schema["description"] = description
+        
+        if image:
+            schema["image"] = image
+        
+        if url:
+            schema["url"] = url
+        
+        return schema
+    
+    def generate_review_schema(self, item_name: str, review_body: str,
+                               rating_value: float, reviewer: str,
+                               item_type: str = "Product") -> Dict:
+        """
+        生成 Review 类型的 Schema
+        
+        Args:
+            item_name: 被评价项目名称
+            review_body: 评价内容
+            rating_value: 评分 (1-5)
+            reviewer: 评价者
+            item_type: 被评价项目类型 (Product, Service, etc.)
+            
+        Returns:
+            JSON-LD Schema 字典
+        """
+        return {
+            "@context": self.context,
+            "@type": "Review",
+            "itemReviewed": {
+                "@type": item_type,
+                "name": item_name
+            },
+            "reviewBody": review_body,
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": rating_value,
+                "bestRating": 5
+            },
+            "author": {
+                "@type": "Person",
+                "name": reviewer
+            }
+        }
+    
+    def extract_qa_from_content(self, content: str) -> List[Dict[str, str]]:
+        """
+        从内容中自动提取 Q&A 对
+        
+        Args:
+            content: 文本内容
+            
+        Returns:
+            Q&A 对列表
+        """
+        import re
+        qa_pairs = []
+        
+        # 模式1: Q: ... A: ...
+        pattern1 = r'[Qq][：:]\s*(.+?)[\n\r]+[Aa][：:]\s*(.+?)(?=[Qq][：:]|\n\n|$)'
+        matches1 = re.findall(pattern1, content, re.DOTALL)
+        for q, a in matches1:
+            qa_pairs.append({"question": q.strip(), "answer": a.strip()})
+        
+        # 模式2: 问题：... 回答：...
+        pattern2 = r'问题[：:]\s*(.+?)[\n\r]+回答[：:]\s*(.+?)(?=问题[：:]|\n\n|$)'
+        matches2 = re.findall(pattern2, content, re.DOTALL)
+        for q, a in matches2:
+            qa_pairs.append({"question": q.strip(), "answer": a.strip()})
+        
+        # 模式3: ## 问题标题 (以问号结尾) + 后续段落作为回答
+        lines = content.split('\n')
+        current_question = None
+        current_answer = []
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                if current_question and current_answer:
+                    qa_pairs.append({
+                        "question": current_question,
+                        "answer": '\n'.join(current_answer)
+                    })
+                    current_question = None
+                    current_answer = []
+                continue
+            
+            # 检测问题行（以？或?结尾的标题）
+            if (line.startswith('#') or line.startswith('##')) and \
+               (line.endswith('？') or line.endswith('?')):
+                if current_question and current_answer:
+                    qa_pairs.append({
+                        "question": current_question,
+                        "answer": '\n'.join(current_answer)
+                    })
+                current_question = line.lstrip('#').strip()
+                current_answer = []
+            elif current_question:
+                current_answer.append(line)
+        
+        # 保存最后一个 Q&A 对
+        if current_question and current_answer:
+            qa_pairs.append({
+                "question": current_question,
+                "answer": '\n'.join(current_answer)
+            })
+        
+        return qa_pairs
+    
+    def auto_generate_faq_schema(self, content: str) -> Optional[Dict]:
+        """
+        从内容中自动提取 Q&A 并生成 FAQ Schema
+        
+        Args:
+            content: 文本内容
+            
+        Returns:
+            FAQPage Schema 或 None（如果没有找到 Q&A）
+        """
+        qa_pairs = self.extract_qa_from_content(content)
+        
+        if not qa_pairs:
+            return None
+        
+        return self.generate_faq_schema(qa_pairs)

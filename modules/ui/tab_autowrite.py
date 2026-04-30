@@ -18,19 +18,8 @@ from modules.fact_density_enhancer import FactDensityEnhancer
 from modules.multimodal_prompt import MultimodalPromptGenerator
 from modules.optimization_techniques import OptimizationTechniqueManager
 from modules.schema_generator import SchemaGenerator
-
-
-INVALID_FS_CHARS = r'<>:"/\\|?*\n\r\t'
-
-
-def sanitize_filename(name: str, max_len: int = 80) -> str:
-    """Copy of utility from geo_tool, kept local to avoid circular imports."""
-    if not name:
-        return "untitled"
-    name = name.strip()
-    name = re.sub(rf"[{re.escape(INVALID_FS_CHARS)}]", "_", name)
-    name = re.sub(r"_+", "_", name).strip("_")
-    return name[:max_len] if len(name) > max_len else name
+from modules.ui.components import render_tab_top_with_clear
+from modules.ui.components import sanitize_filename
 
 
 def render_tab_autowrite(
@@ -49,20 +38,20 @@ def render_tab_autowrite(
     通过参数接收 storage / ss_init / gen_llm / brand / advantages / cfg /
     record_api_cost / model_defaults，由主入口在 with tab2 内调用。
     """
-    # 标题和清空按钮放在同一行，布局更紧凑
-    header_col1, header_col2 = st.columns([4, 1])
-    with header_col1:
-        st.markdown("**✍️ 内容生成**")
-        st.caption("基于关键词自动生成符合 GEO 原则的专业内容，支持单篇和批量生成")
-    with header_col2:
-        st.markdown("")
-        if st.button("清空本模块结果", use_container_width=True, key="content_clear"):
-            st.session_state.generated_contents = []
-            st.session_state.zip_bytes = None
-            st.session_state.zip_filename = ""
-            st.session_state.content_scores = {}
-            st.session_state.selected_content_idx = 0
-            st.toast("创作内容已清空。")
+    # 标题和清空按钮
+    def _clear_content_state():
+        st.session_state.generated_contents = []
+        st.session_state.zip_bytes = None
+        st.session_state.zip_filename = ""
+        st.session_state.content_scores = {}
+        st.session_state.selected_content_idx = 0
+
+    render_tab_top_with_clear(
+        title="✍️ 内容生成",
+        caption="基于关键词自动生成符合 GEO 原则的专业内容，支持单篇和批量生成",
+        clear_key="content_clear",
+        on_clear=_clear_content_state,
+    )
 
     if not st.session_state.keywords:
         st.info("💡 请先在【🎯 关键词蒸馏】生成关键词。")

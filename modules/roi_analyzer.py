@@ -3,7 +3,7 @@ ROI 分析与成本优化模块
 用于计算 API 调用成本、分析 ROI、提供成本优化建议
 """
 from typing import Dict, List, Optional, Tuple
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date as date_class
 import pandas as pd
 from collections import defaultdict
 
@@ -202,7 +202,7 @@ class ROIAnalyzer:
             daily_groups = api_calls_df.groupby("日期")
             for date, group in daily_groups:
                 daily_costs.append({
-                    "date": date.isoformat() if isinstance(date, datetime.date) else str(date),
+                    "date": date.isoformat() if isinstance(date, date_class) else str(date),
                     "cost_usd": group["成本(USD)"].sum(),
                     "cost_cny": group["成本(CNY)"].sum(),
                     "calls": len(group),

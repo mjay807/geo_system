@@ -1,290 +1,307 @@
-# 运行命令
+# GEO 智能内容优化平台
 
-`streamlit run geo_tool.py`
+<div align="center">
 
----
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-red.svg)
+![LangChain](https://img.shields.io/badge/LangChain-0.4+-green.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-# 功能迭代计划
+**让您的品牌在 AI 搜索中被优先引用**
 
-## ✅ 已完成功能
+[快速开始](#-快速开始) · [功能特性](#-功能特性) · [使用指南](#-使用指南) · [文档](#-文档)
 
-- [x] **数据持久化（SQLite）** - 已完成
-  - 关键词、文章、优化记录、验证结果自动保存
-  - 历史记录查看功能（Tab5）
-  - 详见 `docs/implementation/INTEGRATION_NOTES.md`
+</div>
 
-- [x] **AI 蒸馏词 - 托词工具** - 已完成
-  - 支持三种生成模式：AI生成、托词工具、混合模式
-  - 词库管理（编辑、导入、导出）
-  - 组合算法（支持10种组合模式）
-  - LLM 润色功能（混合模式）
-  - 自动去重和相似度过滤
 
-- [x] **收录平台扩展** - 已完成 ✅
-  - 支持 DeepSeek、OpenAI、通义千问、Groq、Moonshot、豆包（字节跳动）、文心一言（百度）
-  - API Key 格式提示和验证
-  - 详见 `docs/guides/PLATFORM_SETUP.md`
-
-- [x] **自媒体账号平台扩展** - 已完成 ✅
-  - 支持 **20个内容生成平台**：
-    1. 知乎（专业问答）
-    2. 小红书（生活种草）
-    3. CSDN（技术博客）
-    4. B站（视频脚本）
-    5. 头条号（资讯软文）
-    6. GitHub（README/文档）
-    7. 微信公众号（长文）
-    8. 抖音图文（短内容）
-    9. 百家号（资讯）
-    10. 网易号（资讯）
-    11. 企鹅号（资讯）
-    12. 简书（文艺）
-    13. 新浪博客（博客）
-    14. 新浪新闻（资讯）
-    15. 搜狐号（资讯）
-    16. QQ空间（社交）
-    17. 邦阅网（外贸）
-    18. 一点号（资讯）
-    19. 东方财富（财经）
-    20. 原创力文档（文档）
-  - 每个平台都有专门的 Prompt 模板
-  - 支持 Markdown 格式输出
-
-- [x] **AI 数据报表** - 已完成 ✅
-  - 自动验证任务（使用历史关键词）
-  - 提及率趋势图（按日期展示）
-  - 平台贡献度分析（文章平台分布）
-  - 关键词效果排名（Top 20）
-  - 竞品对比分析（多维度对比）
-  - 数据导出功能（CSV 格式）
-
-- [x] **高级功能** - 已完成 ✅
-  - E-E-A-T 评估与强化（`docs/features/docs/features/EEAT_FEATURE.md`）
-  - 话题集群生成（`docs/features/docs/features/TOPIC_CLUSTER_FEATURE.md`）
-  - JSON-LD Schema.org 生成（`docs/features/docs/features/JSON_LD_SCHEMA_FEATURE.md`）
-  - 内容质量评分（`docs/features/docs/features/CONTENT_SCORER_FEATURE.md`）
-  - 事实密度增强（`docs/features/docs/features/FACT_DENSITY_FEATURE.md`）
-  - 语义扩展（`docs/features/docs/features/SEMANTIC_EXPANSION_FEATURE.md`）
-  - 关键词挖掘（`docs/features/docs/features/KEYWORD_MINING_FEATURE.md`）
-  - 工作流自动化（`docs/features/docs/features/WORKFLOW_AUTOMATION_FEATURE.md`）
-  - 内容质量指标分析（`docs/features/docs/features/CONTENT_METRICS_FEATURE.md`）
-  - ROI 分析（`docs/features/docs/features/ROI_ANALYSIS_FEATURE.md`）
-  - 负面监控（`docs/features/docs/features/NEGATIVE_MONITOR_FEATURE.md`）
-  - 多模态提示生成（`docs/features/docs/features/MULTIMODAL_FEATURE.md`）
-  - 技术配置生成（`docs/features/docs/features/TECHNICAL_CONFIG_FEATURE.md`）
-  - 资源推荐（`docs/features/docs/features/RESOURCE_RECOMMENDER_FEATURE.md`）
-
-- [x] **平台同步功能** - 已完成 ✅
-  - GitHub API 发布
-  - 12个平台一键复制功能
-  - 发布记录跟踪
-  - 详见 `docs/implementation/IMPLEMENTATION_SUMMARY.md`
 
 ---
 
-## 📋 待实现功能（按优先级排序）
+## 📖 项目简介
 
-> **优先级说明**：优先级基于对 GEO 效果的直接影响、实现成本和用户价值综合评估。  
-> **调整原则**：优先实现能直接提升 GEO 效果的功能（平台扩展、内容渠道），延后实现辅助性功能（图库）。
+**GEO（Generative Engine Optimization）智能内容优化平台** 是一款 AI 驱动的品牌内容策略工具，帮助企业在 AI 搜索引擎（如 ChatGPT、Perplexity、Google SGE）的回答中被优先、准确、可信地提及。
 
-### 🔥 高优先级（核心功能增强）
+### 解决什么问题？
 
-#### 1. 更多平台 API 发布
+当用户向 AI 提问"最好的外贸 ERP 软件是什么？"时，AI 会从互联网内容中检索信息并生成回答。**GEO 工具帮助您的品牌出现在这个回答中**。
 
-**当前支持：** GitHub API 发布
+### 核心价值
 
-**待添加平台：**
-- 微信公众号 API 发布
-- B站 API 发布
-- 知乎 API 发布
-- CSDN API 发布
-- 百家号 API 发布
-- 企鹅号 API 发布
-- 网易号 API 发布
 
-**重要性分析：**
-- ✅ **提升发布效率**：API 发布比手动复制更高效
-- ✅ **自动化流程**：支持批量发布和定时发布
-- ⚠️ **实现成本高**：需要各平台 API 接入，技术难度较高
+| 价值          | 说明                 |
+| ----------- | ------------------ |
+| 🎯 **品牌曝光** | 在 AI 回答中被优先提及      |
+| 📈 **搜索排名** | 内容被 AI 引用，间接提升 SEO |
+| 🏆 **权威建立** | 多平台、多角度内容建立专业形象    |
+| 📊 **数据驱动** | 基于验证数据持续优化策略       |
 
-**实现建议：**
-- 参考 GitHub 发布器实现模式
-- 逐步接入各平台 API
-- 详见 `docs/implementation/PLATFORM_SYNC_IMPLEMENTATION.md`
 
 ---
 
-#### 2. 批量发布功能
+## ✨ 功能特性
 
-**功能描述：**
-- 批量发布多篇文章到多个平台
-- 发布队列管理
-- 定时发布功能
+### 🔍 关键词策略
 
-**状态：** ⏳ **部分实现**
-- ✅ 有发布记录功能
-- ❌ 无批量发布UI
-- ❌ 无发布队列管理
-- ❌ 无定时发布
+- **智能关键词生成**：AI 生成 + 词库组合 + 混合模式
+- **搜索意图覆盖**：对比、评测、使用、购买、问题、推荐
+- **数据增强**：基于历史验证数据反哺关键词策略
+- **语义扩展**：自动扩展相关关键词
 
-**实现建议：**
-- 扩展平台同步模块
-- 添加批量发布UI
-- 实现发布队列和定时任务
+### ✍️ 内容生成
 
----
+- **20+ 平台模板**：知乎、小红书、CSDN、B站、微信公众号等
+- **E-E-A-T 内嵌**：专业性、经验性、权威性、可信度
+- **品牌植入策略**：自然提及 2-4 次，避免过度营销
+- **结构化输出**：结论摘要、清单、FAQ 格式
 
-### 🟡 中优先级（功能扩展）
+### 📚 知识库（RAG）
 
-#### 4. AI 数据报表
+- **文档管理**：上传品牌文档、产品手册、案例库
+- **智能检索**：生成内容时自动检索相关信息
+- **来源保障**：基于真实品牌信息生成内容
 
-**功能描述：**
-- 系统自动模拟用户提问
-- 收录结果实时同步至 AI 数据报表
-- 清晰展示哪些词已被引用、哪些平台贡献了曝光
+### 🔧 内容优化
 
-**重要性分析：**
-- ✅ **监控 GEO 效果**：自动化监控，数据可视化
-- ✅ **指导优化方向**：通过数据反馈优化内容策略
-- ⚠️ **实现成本较高**：需要定时任务、数据可视化等
+- **E-E-A-T 强化**：四维评估与自动优化
+- **事实密度增强**：添加数据支撑和来源引用
+- **结构化数据**：自动生成 JSON-LD Schema（FAQ、HowTo、Article 等）
+- **内容评分**：量化评估内容质量
 
-**评估与优化建议：**
-- ⚠️ **需要优化**：
-  1. **模拟提问的策略**：
-     - 定期自动验证（如每天/每周）
-     - 支持自定义验证频率
-     - 记录历史趋势（提及率变化）
-  2. **数据存储**：
-     - 使用数据库（SQLite）存储历史数据
-     - 支持数据导出和分析
-  3. **报表功能**：
-     - 提及率趋势图
-     - 平台贡献度分析
-     - 关键词效果排名
-     - 竞品对比分析
-  4. **实时同步**：
-     - 后台任务 + 实时更新 UI
+### ✅ 验证监控
 
-**实现建议：**
-- 新增模块：AI 数据报表（可放在 Tab5 或独立 Tab）
-- 自动验证任务（定时/手动触发）
-- 数据可视化（趋势图、对比图、热力图）
-- 数据导出功能
+- **多模型验证**：DeepSeek、OpenAI、通义千问等多模型交叉验证
+- **AI 搜索验证**：接入 Perplexity 真实搜索引擎验证
+- **竞品对比**：同时验证自有品牌和竞品
+- **负面防护**：主动生成负面查询并监控
+
+### 📊 数据分析
+
+- **提及率趋势**：按日期跟踪品牌提及率变化
+- **平台贡献度**：分析各平台的内容贡献
+- **ROI 分析**：API 调用成本统计与优化建议
+- **内容独特性**：检测批量内容的相似度
+
+### 🔄 平台同步
+
+- **GitHub API**：一键发布到 GitHub
+- **12 平台复制**：知乎、小红书、CSDN 等平台一键复制
+- **发布记录**：跟踪发布状态
 
 ---
 
-### 🟢 低优先级（高级功能 / 可选功能）
+## 🚀 快速开始
 
-#### 5. 企业知识库 - 企业图库
+### 环境要求
 
-**功能描述：**
-- 分类上传产品图、场景图、资质证书等
-- 这些素材会在后续内容生成中自动嵌入，确保品牌一致性
+- Python 3.10+
+- pip 或 conda
 
-**重要性分析：**
-- ⚠️ **对 GEO 直接贡献有限**：GEO 核心是文本内容，大模型主要从文本中提取信息
-- ⚠️ **适用场景有限**：主要适用于小红书、抖音等图文平台，对知乎、CSDN 等文字平台作用不大
-- ⚠️ **实现成本较高**：需要图片存储、管理、智能匹配等功能
-- ✅ **替代方案**：可手动配图，或让 LLM 生成图片描述/建议
+### 安装步骤
 
-**评估与优化建议：**
-- ✅ **优点**：提升品牌一致性，素材复用
-- ⚠️ **需要优化**：
-  1. **图片存储与管理**：
-     - 使用本地文件系统或云存储（OSS/S3）
-     - 支持图片分类、标签、搜索
-  2. **图片在内容中的嵌入方式**：
-     - 文本内容：生成图片描述，提示"可配图：xxx"
-     - Markdown：自动插入图片链接
-     - 小红书/抖音：生成图片使用建议
-  3. **图片与内容的智能匹配**：
-     - 使用 LLM 分析内容主题，自动推荐匹配图片
-  4. **版权与合规**：
-     - 增加图片版权信息记录
+```bash
+# 1. 克隆仓库
+git clone https://github.com/your-username/geo_tool.git
+cd geo_tool
 
-**实现建议：**
-- 新增模块：企业图库管理（可放在侧边栏或独立 Tab）
-- 图片上传（支持批量）
-- 图片分类（产品图、场景图、资质证书等）
-- 图片标签系统
-- 内容生成时自动匹配图片
+# 2. 安装依赖
+pip install -r requirements.txt
 
-**建议：** 可延后实现，或先实现简化版（仅图片上传和描述生成）
+# 3. 运行应用
+streamlit run geo_tool.py
+```
 
----
+### 配置 API Key
 
-#### 6. 数据报表高级分析
+首次运行后，在侧边栏配置 LLM API Key：
 
-- 更详细的统计分析
-- 预测性分析
-- 竞品深度对比
 
-#### 7. 自动发布功能
+| 提供商      | 说明          |
+| -------- | ----------- |
+| DeepSeek | 推荐，性价比高     |
+| OpenAI   | GPT-4o-mini |
+| 通义千问     | 阿里云         |
+| Groq     | 推理加速        |
+| Moonshot | Kimi        |
+| 豆包       | 字节跳动        |
+| 文心一言     | 百度          |
 
-- 接入各平台 API
-- 自动发布生成的内容
-- 发布状态跟踪
 
 ---
 
-## 📊 整体架构建议
+## 📋 使用指南
 
-### 优先级排序
+### 基本工作流程
 
-1. **高优先级**（核心功能增强）
-   - 收录平台扩展（豆包、文心一言等）⭐ ✅ 已完成
-   - 自媒体平台扩展（微信公众号、抖音等）⭐ ✅ 已完成
-   - 稿件记录 ✅ 已完成
+```
+1. 关键词蒸馏 → 生成 GEO 优化关键词
+        ↓
+2. 品牌知识库 → 上传品牌文档和案例
+        ↓
+3. 自动创作 → 基于知识库生成内容
+        ↓
+4. 内容优化 → E-E-A-T 强化 + Schema 生成
+        ↓
+5. 多模型验证 → 验证品牌是否被提及
+        ↓
+6. 平台同步 → 发布到各平台
+        ↓
+7. 数据报表 → 监控效果并优化
+```
 
-2. **中优先级**（功能扩展）
-   - AI 数据报表（基础版）✅ 已完成
+### Tab 功能说明
 
-3. **低优先级**（高级功能 / 可选功能）
-   - 企业图库（对 GEO 直接贡献有限，可延后）
-   - 数据报表高级分析
-   - 自动发布功能
 
-### 技术架构建议
+| Tab        | 功能      | 说明             |
+| ---------- | ------- | -------------- |
+| 🎯 关键词蒸馏   | 关键词生成   | AI/词库/混合三种模式   |
+| ✍️ 自动创作    | 内容生成    | 20+ 平台模板       |
+| 🔧 文章优化    | 内容优化    | E-E-A-T 强化     |
+| ✅ 多模型验证    | 效果验证    | 多模型交叉验证        |
+| 📚 历史记录    | 数据查看    | 历史数据回顾         |
+| 📊 AI 数据报表 | 数据分析    | 趋势图、ROI 分析     |
+| ⚙️ 工作流自动化  | 自动化     | 一键完成全流程        |
+| 📦 GEO 资源库 | 资源管理    | 优化资源推荐         |
+| 🔄 平台同步    | 内容分发    | GitHub + 12 平台 |
+| 🛠️ 配置优化助手 | 配置管理    | 智能配置建议         |
+| 📚 品牌知识库   | RAG 知识库 | 文档管理与检索        |
 
-1. **数据持久化** ✅ 已完成
-   - 使用 SQLite（轻量）
-   - 存储：关键词、内容、优化记录、验证结果、图片元数据
-
-2. **模块化重构**
-   - 将功能拆分为独立模块
-   - 便于维护和扩展
-
-3. **配置管理**
-   - 使用配置文件管理平台模板、词库等
-   - 支持用户自定义
-
-4. **性能优化**
-   - 批量操作使用并发/异步
-   - 缓存常用数据
-
----
-
-## 📝 实现记录
-
-### 已完成
-- [x] SQLite 数据持久化（2024）
-- [x] 历史记录查看功能
-- [x] 托词工具（AI 蒸馏词）- 2024
-- [x] 收录平台扩展（豆包、文心一言）- 2024
-- [x] 自媒体平台扩展（微信公众号、抖音等）- 2024
-- [x] AI 数据报表 - 2024
-
-### 待开始（按优先级）
-- [ ] 企业图库 - 低优先级（可延后）
 
 ---
 
-## 🔗 相关文档
+## 🏗️ 项目结构
 
-📚 **完整文档索引**：查看 [DOCS.md](DOCS.md) 获取所有文档的快速导航
+```
+geo_tool/
+├── .streamlit/              # Streamlit 配置
+│   └── config.toml          # 主题配置
+├── docs/                    # 项目文档
+│   ├── features/            # 功能文档
+│   ├── guides/              # 使用指南
+│   ├── implementation/      # 实现文档
+│   └── analysis/            # 分析报告
+├── modules/                 # 核心模块
+│   ├── ui/                  # UI 模块（Tab）
+│   │   ├── tab_keywords.py  # 关键词 Tab
+│   │   ├── tab_autowrite.py # 自动创作 Tab
+│   │   ├── tab_optimize.py  # 文章优化 Tab
+│   │   ├── tab_validation.py # 验证 Tab
+│   │   ├── tab_reports.py   # 报表 Tab
+│   │   ├── tab_workflow.py  # 工作流 Tab
+│   │   ├── tab_resources.py # 资源库 Tab
+│   │   ├── tab_platform_sync.py # 平台同步 Tab
+│   │   ├── tab_config_optimizer.py # 配置优化 Tab
+│   │   ├── tab_knowledge.py # 知识库 Tab
+│   │   ├── components.py    # 公共组件
+│   │   ├── state.py         # 状态管理
+│   │   └── theme.py         # 主题样式
+│   ├── knowledge_base.py    # RAG 知识库
+│   ├── ai_search_verifier.py # AI 搜索验证
+│   ├── content_uniqueness.py # 内容独特性检测
+│   ├── keyword_data_enhancer.py # 关键词数据增强
+│   ├── llm_factory.py       # LLM 工厂
+│   ├── data_storage.py      # 数据存储
+│   ├── content_scorer.py    # 内容评分
+│   ├── eeat_enhancer.py     # E-E-A-T 强化
+│   ├── schema_generator.py  # Schema 生成
+│   └── ...                  # 其他模块
+├── platform_sync/           # 平台同步模块
+│   ├── base_publisher.py    # 发布器基类
+│   ├── github_publisher.py  # GitHub 发布器
+│   └── copy_manager.py      # 复制管理器
+├── geo_tool.py              # 主程序入口
+├── requirements.txt         # 依赖声明
+├── README.md                # 项目说明
+└── DOCS.md                  # 文档索引
+```
 
-**主要文档**：
-- `docs/implementation/INTEGRATION_NOTES.md` - SQLite 持久化集成说明
-- `docs/guides/STORAGE_GUIDE.md` - 数据持久化方案对比
-- `docs/guides/PLATFORM_SETUP.md` - 平台扩展安装说明（豆包、文心一言）
-- `modules/data_storage.py` - 数据存储模块实现
+---
+
+## 📊 技术栈
+
+
+| 技术                                   | 用途        |
+| ------------------------------------ | --------- |
+| [Streamlit](https://streamlit.io/)   | Web UI 框架 |
+| [LangChain](https://langchain.com/)  | LLM 编排框架  |
+| [SQLite](https://sqlite.org/)        | 数据存储      |
+| [Plotly](https://plotly.com/)        | 数据可视化     |
+| [Pandas](https://pandas.pydata.org/) | 数据处理      |
+
+
+### 支持的 LLM
+
+
+| 提供商      | 模型                   |
+| -------- | -------------------- |
+| DeepSeek | deepseek-chat        |
+| OpenAI   | gpt-4o-mini, gpt-4   |
+| 通义千问     | qwen-max, qwen-turbo |
+| Groq     | llama3-70b-8192      |
+| Moonshot | moonshot-v1-128k     |
+| 豆包       | 自定义                  |
+| 文心一言     | ernie-bot-turbo      |
+
+
+---
+
+## 📚 文档
+
+
+| 文档                                         | 说明         |
+| ------------------------------------------ | ---------- |
+| [DOCS.md](DOCS.md)                         | 完整文档索引     |
+| [快速开始指南](docs/guides/QUICK_START_GUIDE.md) | 新用户入门      |
+| [平台设置指南](docs/guides/PLATFORM_SETUP.md)    | API Key 配置 |
+| [数据存储指南](docs/guides/STORAGE_GUIDE.md)     | 存储方案说明     |
+| [产品规格文档](docs/PRODUCT_SPEC.md)             | 产品定位与规划    |
+
+
+### 功能文档
+
+- [品牌知识库（RAG）](docs/features/KNOWLEDGE_BASE_FEATURE.md)
+- [AI 搜索验证](docs/features/AI_SEARCH_VERIFIER_FEATURE.md)
+- [内容独特性检测](docs/features/CONTENT_UNIQUENESS_FEATURE.md)
+- [关键词数据增强](docs/features/KEYWORD_DATA_ENHANCER_FEATURE.md)
+- [E-E-A-T 评估与强化](docs/features/EEAT_FEATURE.md)
+- [JSON-LD Schema 生成](docs/features/JSON_LD_SCHEMA_FEATURE.md)
+
+---
+
+## 🤝 贡献
+
+欢迎贡献代码、报告问题或提出建议！
+
+### 贡献方式
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 创建 Pull Request
+
+### 开发规范
+
+- 遵循 PEP 8 代码规范
+- 添加必要的注释和文档
+- 确保所有测试通过
+
+---
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+
+---
+
+## 🙏 致谢
+
+- [Streamlit](https://streamlit.io/) - 优秀的 Web UI 框架
+- [LangChain](https://langchain.com/) - 强大的 LLM 编排框架
+- 所有贡献者和用户
+
+---
+
+
+
+**如果这个项目对您有帮助，请给一个 ⭐ Star 支持一下！**
+

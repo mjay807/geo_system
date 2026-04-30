@@ -6,4 +6,28 @@ Each top-level Tab in `geo_tool.py` should have a corresponding
 invoked from the main app.
 """
 
-from . import tab_keywords, tab_autowrite
+from . import (
+    tab_keywords,
+    tab_autowrite,
+    tab_optimize,
+    tab_validation,
+    tab_history,
+    tab_reports,
+    tab_workflow,
+    tab_resources,
+    tab_platform_sync,
+    tab_config_optimizer,
+)
+
+__all__ = [
+    "tab_keywords",
+    "tab_autowrite",
+    "tab_optimize",
+    "tab_validation",
+    "tab_history",
+    "tab_reports",
+    "tab_workflow",
+    "tab_resources",
+    "tab_platform_sync",
+    "tab_config_optimizer",
+]

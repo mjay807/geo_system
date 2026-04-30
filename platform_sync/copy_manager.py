@@ -155,7 +155,8 @@ class CopyManager:
             pyperclip.copy(text)
             return True
         except Exception as e:
-            print(f"复制失败: {e}")
+            import logging
+            logging.error(f"复制失败: {e}")
             return False
     
     def generate_publish_guide(self, platform: str) -> str:

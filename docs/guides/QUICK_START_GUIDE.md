@@ -326,20 +326,18 @@ with tabs[5]:  # 平台同步Tab
 ## ✅ 步骤6：测试
 
 1. **获取GitHub Token**：
-   - 访问 https://github.com/settings/tokens
-   - 创建新的 Personal Access Token
-   - 选择 `repo` 权限
-
+  - 访问 [https://github.com/settings/tokens](https://github.com/settings/tokens)
+  - 创建新的 Personal Access Token
+  - 选择 `repo` 权限
 2. **运行测试**：
-   ```bash
+  ```bash
    streamlit run geo_tool.py
-   ```
-
+  ```
 3. **测试流程**：
-   - 配置GitHub账号
-   - 生成一篇文章
-   - 发布到GitHub
-   - 检查GitHub仓库是否成功创建文件
+  - 配置GitHub账号
+  - 生成一篇文章
+  - 发布到GitHub
+  - 检查GitHub仓库是否成功创建文件
 
 ## 🎉 完成！
 
@@ -353,3 +351,4 @@ with tabs[5]:  # 平台同步Tab
 
 - [GitHub API文档](https://docs.github.com/en/rest)
 - [完整实现指南](./PLATFORM_SYNC_IMPLEMENTATION.md)
+

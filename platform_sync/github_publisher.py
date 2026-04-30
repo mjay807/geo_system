@@ -4,12 +4,21 @@ GitHub发布器 - 最简单的实现示例
 import base64
 import httpx
 from typing import Dict, Any, Optional
+from .base_publisher import BasePublisher
 
 
-class GitHubPublisher:
+class GitHubPublisher(BasePublisher):
     """GitHub发布器"""
     
     def __init__(self, api_key: str, repo_owner: str, repo_name: str):
+        # 调用父类构造函数
+        account_config = {
+            "api_key": api_key,
+            "repo_owner": repo_owner,
+            "repo_name": repo_name
+        }
+        super().__init__(platform="GitHub", account_config=account_config)
+        
         self.api_key = api_key
         self.repo_owner = repo_owner
         self.repo_name = repo_name
@@ -19,7 +28,7 @@ class GitHubPublisher:
             "Accept": "application/vnd.github.v3+json"
         }
     
-    def publish(self, content: str, title: str, file_path: Optional[str] = None) -> Dict[str, Any]:
+    def publish(self, content: str, title: str, file_path: Optional[str] = None, **kwargs) -> Dict[str, Any]:
         """
         发布内容到GitHub
         
@@ -27,6 +36,7 @@ class GitHubPublisher:
             content: Markdown内容
             title: 文章标题
             file_path: 文件路径（可选）
+            **kwargs: 其他参数
         
         Returns:
             {
@@ -82,7 +92,7 @@ class GitHubPublisher:
                 try:
                     error_json = response.json()
                     error_text = error_json.get('message', error_text)
-                except:
+                except Exception:
                     pass
                 return {
                     'success': False,
@@ -110,5 +120,5 @@ class GitHubPublisher:
         try:
             response = httpx.get(f"{self.base_url}/user", headers=self.headers, timeout=10.0)
             return response.status_code == 200
-        except:
+        except Exception:
             return False
