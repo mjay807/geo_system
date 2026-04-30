@@ -168,9 +168,12 @@ def load_default_cfg():
                 for key in ["brand", "advantages", "competitors", "temperature"]:
                     if key in app_config and app_config[key]:
                         base_cfg[key] = app_config[key]
-    except Exception:
+    except FileNotFoundError:
         # secrets.toml 不存在时静默忽略，用户可通过侧边栏配置
         pass
+    except Exception as e:
+        import logging
+        logging.warning(f"读取 secrets.toml 失败: {e}")
 
     return base_cfg
 
@@ -230,28 +233,11 @@ ss_init("image_descriptions", [])  # 图片描述列表
 ss_init("detail_tab_active", "🎨 增强工具")  # 保存当前激活的详情Tab
 
 # ------------------- 工具函数 -------------------
-from modules.ui.components import INVALID_FS_CHARS
-
-
-def sanitize_filename(name: str, max_len: int = 80) -> str:
-    from modules.ui.components import sanitize_filename as _sanitize_filename
-    return _sanitize_filename(name, max_len)
-
-
-def safe_decode_uploaded(uploaded) -> str:
-    from modules.ui.components import safe_decode_uploaded as _safe_decode_uploaded
-    return _safe_decode_uploaded(uploaded)
-
-
-def extract_json_array(text: str):
-    """从模型输出中抽取 JSON 数组（JsonOutputParser 失败时兜底）。"""
-    from modules.ui.components import extract_json_array as _extract_json_array
-    return _extract_json_array(text)
-
-
 def validate_cfg(cfg: dict):
-    """保留你原本的"必须填写所有 API Key"约束，但不 st.stop：改为禁用按钮 + 提示。"""
+    """验证配置完整性，返回 (是否有效, 错误列表)。"""
     errors = []
+    warnings = []
+    
     if not cfg.get("gen_api_key", "").strip():
         errors.append("生成&优化 LLM 的 API Key 未填写")
 
@@ -263,8 +249,13 @@ def validate_cfg(cfg: dict):
     for vp in verify_providers:
         if not verify_keys.get(vp, "").strip():
             errors.append(f"验证模型 {vp} 的 API Key 未填写")
+    
+    if not cfg.get("brand", "").strip():
+        warnings.append("品牌名称未填写（部分功能需要）")
+    if not cfg.get("advantages", "").strip():
+        warnings.append("核心优势未填写（部分功能需要）")
 
-    return (len(errors) == 0), errors
+    return (len(errors) == 0), errors + warnings
 
 
 def model_defaults(provider: str) -> str:
@@ -408,9 +399,14 @@ with st.sidebar:
             st.session_state.cfg_applied = False
 
     if not st.session_state.cfg_valid:
-        st.warning("配置未满足运行条件：\n- " + "\n- ".join(st.session_state.cfg_errors))
+        with st.container(border=True):
+            st.markdown("**⚠️ 完成配置后即可使用全部功能**")
+            for err in st.session_state.cfg_errors:
+                st.markdown(f"• {err}")
     else:
-        st.success("配置已就绪，可运行全部模块。")
+        with st.container(border=True):
+            st.markdown("**✅ 配置已就绪**")
+            st.caption("所有功能已解锁，可以开始使用")
 
     st.markdown("---")
     if st.button("重置全部结果（不删除配置）", use_container_width=True, key="sb_reset_all"):

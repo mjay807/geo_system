@@ -38,7 +38,6 @@ def render_tab_optimize(
     )
 
     # === 文章优化功能（主流程） ===
-    st.markdown("---")
     st.markdown("**✏️ 文章内容优化**")
 
     with st.container(border=True):

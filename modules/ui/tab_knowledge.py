@@ -79,7 +79,18 @@ def _render_upload_section(kb: KnowledgeBase):
         )
         
         if uploaded_file:
-            content = uploaded_file.read().decode("utf-8")
+            # 安全解码文件内容
+            b = uploaded_file.read()
+            content = None
+            for enc in ("utf-8-sig", "utf-8", "gb18030", "gbk"):
+                try:
+                    content = b.decode(enc)
+                    break
+                except Exception:
+                    pass
+            if content is None:
+                content = b.decode("utf-8", errors="replace")
+            
             st.text_area("文件预览", content[:1000] + "..." if len(content) > 1000 else content, 
                         height=150, disabled=True)
             
@@ -169,7 +180,7 @@ def _render_search_test(kb: KnowledgeBase):
     st.markdown("#### 搜索测试")
     st.caption("测试知识库检索效果，验证文档是否被正确索引")
     
-    query = st.text_input("输入测试查询", placeholder="例如：产品有什么优势？")
+    query = st.text_input("输入测试查询", placeholder="🔍 例如：产品有什么优势？", label_visibility="collapsed")
     
     col1, col2 = st.columns(2)
     with col1:

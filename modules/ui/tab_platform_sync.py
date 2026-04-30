@@ -49,7 +49,7 @@ def render_tab_platform_sync(storage, brand: str) -> None:
                 key="github_repo_name"
             )
 
-            col1, col2 = st.columns([1, 4])
+            col1, col2 = st.columns([1, 1])
             with col1:
                 if st.button("💾 保存配置", type="primary", use_container_width=True):
                     if github_api_key and github_repo_owner and github_repo_name:

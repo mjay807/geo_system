@@ -58,7 +58,8 @@ def render_tab_workflow(
                             st.rerun()
 
                     with col3:
-                        if st.button("▶️ 执行", key=f"run_{workflow['id']}", use_container_width=True):
+                        if st.button("▶️ 执行", key=f"run_{workflow['id']}", use_container_width=True, 
+                                     disabled=gen_llm is None):
                             # 创建回调函数
                             def generate_keywords_callback(num_keywords, generation_mode, brand, advantages):
                                 """关键词生成回调函数"""

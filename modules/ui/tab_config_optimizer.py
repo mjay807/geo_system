@@ -64,13 +64,13 @@ def render_tab_config_optimizer(
                 st.markdown(f"**竞品列表**：{', '.join(competitor_list[:5])}{'...' if len(competitor_list) > 5 else ''}")
 
         # 分析按钮
-        col1, col2 = st.columns([1, 3])
+        col1, col2 = st.columns([1, 1])
         with col1:
             analyze_btn = st.button("🔍 分析配置优化", type="primary", use_container_width=True, key="tab10_optimize_config")
 
         with col2:
             if st.session_state.config_optimization_result:
-                st.success("✅ 已有优化结果，可直接查看下方建议")
+                st.success("✅ 已有优化结果")
 
         # 执行分析
         if analyze_btn:

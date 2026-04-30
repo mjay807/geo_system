@@ -140,7 +140,6 @@ def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) 
                             st.rerun()
 
                 # 统一更新所有词库按钮
-                st.markdown("---")
                 if st.button(
                     "💾 更新所有词库",
                     use_container_width=True,
@@ -179,8 +178,6 @@ def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) 
                     key="kw_export_json",
                 )
 
-                st.markdown("---")
-
                 # 导入
                 uploaded_wordbanks = st.file_uploader(
                     "导入词库（JSON）",
@@ -199,8 +196,6 @@ def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) 
                     except Exception as e:
                         st.error(f"导入失败：{e}")
 
-                st.markdown("---")
-
                 # 重置为默认词库
                 if st.button(
                     "重置为默认词库",
@@ -212,8 +207,6 @@ def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) 
                     )
                     st.success("已重置为默认词库")
                     st.rerun()
-
-        st.markdown("---")
 
     # ========== 区域 3：生成控制 ==========
     with st.container(border=True):
@@ -1251,7 +1244,7 @@ def render_tab_keywords(storage, ss_init, gen_llm, brand: str, advantages: str) 
         search_col, filter_col = st.columns([3, 1])
         with search_col:
             search_term = st.text_input(
-                "🔍 搜索关键词", key="kw_search", placeholder="输入关键词搜索..."
+                "搜索关键词", key="kw_search", placeholder="🔍 输入关键词搜索...", label_visibility="collapsed"
             )
         with filter_col:
             show_original = st.checkbox(

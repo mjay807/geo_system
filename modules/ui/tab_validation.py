@@ -91,8 +91,6 @@ def render_tab_validation(
                     st.success("✅ 负面查询已添加到验证查询中")
                     st.rerun()
 
-    st.markdown("---")
-
     with st.container(border=True):
         with st.form("verify_form", clear_on_submit=False):
             test_queries = st.text_area(
@@ -104,7 +102,7 @@ def render_tab_validation(
             st.session_state.verify_last_queries = test_queries
 
             run_verify_disabled = (not st.session_state.cfg_valid) or (not verify_llms) or (not test_queries.strip())
-            run_verify = st.form_submit_button("开始验证", use_container_width=True, disabled=run_verify_disabled)
+            run_verify = st.form_submit_button("🔍 开始验证", use_container_width=True, disabled=run_verify_disabled)
 
         # 获取负面监控开关状态
         negative_monitor_enabled = st.session_state.get("negative_monitor_enabled", False)

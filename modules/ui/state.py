@@ -28,7 +28,7 @@ def init_session_state():
 
     # 关键词模块
     ss_init("keywords", [])
-    ss_init("kw_last_num", 40)
+    ss_init("kw_last_num", 20)
     ss_init("kw_generation_mode", "AI生成")
     ss_init("wordbanks", None)
 

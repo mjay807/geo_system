@@ -148,7 +148,6 @@ def render_tab_reports(
         st.info("📊 暂无验证数据。请先运行自动验证任务或手动验证。")
     else:
         # 数据概览
-        st.markdown("---")
         st.markdown("#### 📈 数据概览")
 
         col1, col2, col3, col4 = st.columns(4)
@@ -173,7 +172,6 @@ def render_tab_reports(
 
         # 1. 提及率趋势图
         if "验证时间" in verify_df.columns and len(verify_df) > 0:
-            st.markdown("---")
             st.markdown("#### 📊 提及率趋势图")
 
             # 按日期聚合数据
@@ -196,7 +194,6 @@ def render_tab_reports(
                 st.plotly_chart(fig_trend, use_container_width=True)
 
         # 2. 平台贡献度分析（基于文章平台）
-        st.markdown("---")
         st.markdown("#### 🌐 平台贡献度分析")
 
         articles = storage.get_articles(brand=brand)
@@ -223,7 +220,6 @@ def render_tab_reports(
             st.info("暂无文章数据。")
 
         # 话题集群分析模块
-        st.markdown("---")
         st.markdown("#### 🎯 话题集群分析")
         st.caption("基于历史关键词生成话题集群，分析内容覆盖情况，发现内容盲区")
 
@@ -390,10 +386,8 @@ def render_tab_reports(
                             ideas = suggestion.get('content_ideas', [])
                             if ideas:
                                 st.markdown(f"- **内容创意**：{', '.join(ideas[:3])}")
-                            st.markdown("---")
 
         # ROI 分析与成本优化模块
-        st.markdown("---")
         st.markdown("#### 💰 ROI 分析与成本优化")
         st.caption("量化 GEO 投入产出比，优化成本结构，数据驱动决策")
 
@@ -621,7 +615,6 @@ def render_tab_reports(
                 )
 
         # 3. 内容质量指标分析
-        st.markdown("---")
         st.markdown("#### 📈 内容质量指标分析")
         st.caption("分析内容的信任度、权威性、参与度等关键指标，量化内容质量")
 
@@ -797,7 +790,6 @@ def render_tab_reports(
             st.error(f"获取内容质量指标失败：{e}")
 
         # 4. 关键词效果排名
-        st.markdown("---")
         st.markdown("#### 🎯 关键词效果排名")
 
         brand_verify = verify_df[verify_df["品牌"] == brand].copy()
@@ -828,7 +820,6 @@ def render_tab_reports(
             st.info("暂无品牌验证数据。")
 
         # 4. 竞品对比分析
-        st.markdown("---")
         st.markdown("#### ⚔️ 竞品对比分析")
 
         if len(competitor_list) > 0:
@@ -870,7 +861,6 @@ def render_tab_reports(
             st.info("💡 提示：在侧边栏配置竞品品牌后，可查看竞品对比分析。")
 
         # 5. 负面防护监控报告
-        st.markdown("---")
         st.markdown("#### 🛡️ 负面防护监控报告")
         st.caption("分析负面查询中的品牌提及情况，提供风险预警和优化建议")
 
@@ -981,7 +971,6 @@ def render_tab_reports(
             st.error(f"生成负面监控报告失败：{e}")
 
         # 6. 数据导出
-        st.markdown("---")
         st.markdown("#### 💾 数据导出")
 
         col1, col2 = st.columns(2)

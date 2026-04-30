@@ -92,7 +92,7 @@ def render_tab_autowrite(
 
                 keywords_to_generate = []
                 if mode == "单篇生成":
-                    col1, col2 = st.columns([2, 1])
+                    col1, col2 = st.columns(2)
                     with col1:
                         selected_keyword = st.selectbox(
                             "选择关键词",
@@ -110,7 +110,7 @@ def render_tab_autowrite(
                     if selected_keyword:
                         keywords_to_generate = [(selected_keyword, platform)]
                 else:
-                    col1, col2 = st.columns([3, 1])
+                    col1, col2 = st.columns(2)
                     with col1:
                         selected_keywords = st.multiselect(
                             "选择关键词（可多选）",
