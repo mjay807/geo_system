@@ -1,0 +1,15 @@
+services:
+  geo:
+    build: .
+    image: geo_system:latest
+    container_name: geo_system
+    ports:
+      - "8501:8501"
+    volumes:
+      # 持久化：SQLite 数据库 + 知识库
+      - ./data:/data
+      # 可选：API Key 配置（需先 cp .streamlit/secrets.toml.example .streamlit/secrets.toml）
+      # - ./.streamlit/secrets.toml:/app/.streamlit/secrets.toml:ro
+    environment:
+      GEO_DATA_DIR: /data
+    restart: unless-stopped

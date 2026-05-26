@@ -40,8 +40,9 @@ build/
 .DS_Store
 Thumbs.db
 
-# 数据目录（如果使用JSON方式）
-data/
+# 数据目录（Docker 持久化，保留目录占位）
+data/*
+!data/.gitkeep
 
 # 知识库数据
 knowledge_base/

@@ -38,13 +38,15 @@ def build_openai(api_key: str, model: str, temperature: float):
 
 
 def build_tongyi(api_key: str, model: str, temperature: float):
-    """构建通义千问 LLM"""
+    """构建通义千问 LLM（langchain-community + dashscope）"""
     try:
         from langchain_community.chat_models import ChatTongyi
         return ChatTongyi(api_key=api_key, model=model, model_kwargs={"temperature": temperature})
-    except Exception:
-        from langchain_aliyun import ChatTongyi  # type: ignore
-        return ChatTongyi(api_key=api_key, model=model, temperature=temperature)
+    except ImportError as e:
+        raise ValueError(
+            "通义千问初始化失败：请安装 dashscope（pip install dashscope），并确认 langchain-community 已安装。"
+            f" 原始错误：{e}"
+        ) from e
 
 
 def build_groq(api_key: str, model: str, temperature: float):
